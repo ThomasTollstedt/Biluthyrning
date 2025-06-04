@@ -1,0 +1,118 @@
+﻿
+@model AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+@{
+    var removedMessage = TempData["BookingRemoved"] as string;
+    
+    if (!string.IsNullOrEmpty(removedMessage))
+    {
+        <div class="alert @(removedMessage.Contains("har tagits bort") ? "alert-success" : "alert-warning")">
+        @removedMessage
+        </div>           
+    }
+}
+
+@{
+    var customerCreated = TempData["customerCreated"] as string;
+    if (!string.IsNullOrEmpty(customerCreated))
+    {
+        <div class="alert alert-success">@customerCreated</div>
+    }
+}
+
+<h2>Admin Dashboard</h2>
+
+
+<br />
+<h3>Kundregister</h3>
+<p>Se nedan för att skapa nya kunder samt registrera ny kund. </p>
+<div class="mb-3">
+    <a asp-action="CreateUser" class="btn btn-primary">Skapa ny kund</a>
+</div>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>E-post</th>
+            <th>Användarnamn</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model.Customers)
+        {
+            <tr>
+                <td>@customer.Email</td>
+                <td>@customer.UserName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<h3>Alla bokningar</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Bil</th>
+            <th>Startdatum</th>
+            <th>Slutdatum</th>
+            <th>Åtgärder</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model.Bookings)
+        {
+            <tr>
+                <td>@(booking.Car != null ? booking.Car.DisplayName : "Bil saknas")</td>               
+                <td>@booking.StartDate.ToShortDateString()</td>
+                <td>@booking.EndDate.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Delete" asp-controller="Admin" asp-route-id="@booking.Id" method="post" class="btn btn-primary">Radera</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+   <h3>Alla bilar</h3>
+   <p>Nedan visas samtliga bilar skapa, ta bort eller justera befintliga bilar nedan.</p>
+
+<div class="mb-3">
+    <a asp-action="Create" asp-controller="Cars" class="btn btn-primary">Skapa ny bil</a>
+</div>
+<br />
+
+   <table class="table">
+       <thead>
+           <tr>
+               <td>Bil</td>
+               <td>Bild</td>
+           </tr>
+       </thead>
+       <tbody>
+        @foreach (var car in Model.Cars)
+        {
+            <tr>
+                <td>@car.DisplayName</td>
+                
+                <td>
+                    <img src="@Url.Content(car.ImageUrl)" alt="@car.Model" style="max-width: 300px; height: auto;" />
+                    
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-controller="Admin" asp-route-id="@car.Id" method="post" class="btn btn-primary">Radera</a>
+                    <a asp-action="Edit" asp-controller="Cars" asp-route-id="@car.Id" method="post" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-controller="Cars" asp-route-id="@car.Id" method="post" class="btn btn-primary">Details</a>
+                </td>
+
+            </tr>
+            
+        }
+
+
+       </tbody>
+
+
+   </table>

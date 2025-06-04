@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CarRental.Models.Car>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Bilgarage</h1>
+<h3>Nedan listas samtliga tillgängliga bilar</h3>
+<p>Om en bil inte finns i listan så är den alltså inte tillgänglig att hyra just nu. Kontakta oss på 018-666 00 666 för ytterligare information</p>
+<p>För att boka måste du vara inloggad som kund hos oss, kontakta oss för att skapa ett konto. </p>
+
+<p>
+    @if (User.IsInRole("Admin") && User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <a asp-action="Create" class="btn btn-primary">Lägg till ny bil till uthyrningen</a>
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Available)
+            </th>
+           
+            <th>@Html.DisplayNameFor(model => model.ImageUrl)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Brand)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Available)
+                </td>
+                <td>
+                    <img src="@Url.Content(item.ImageUrl)" alt="@item.Model" style="max-width: 300px;" />
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin") && User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary" >Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary">Delete</a>
+                    }
+                    else if (User.IsInRole("Customer") && User.Identity != null && User.Identity.IsAuthenticated && item.Available)
+                    {
+                        
+                        <a asp-action="Create" asp-controller="Bookings" asp-route-carId="@item.Id" class="btn btn-primary">Boka</a>
+                    }
+                    else if (item.Available)
+                    {
+                        <a asp-action="Create" asp-controller="Bookings" asp-route-carId="@item.Id" class="btn btn-primary">Boka</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

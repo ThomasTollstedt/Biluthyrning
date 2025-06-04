@@ -1,0 +1,65 @@
+﻿@model IEnumerable<CarRental.Models.Booking>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+
+@{
+    var bookingRemoved = TempData["Message"] as string;
+    if (!string.IsNullOrEmpty(bookingRemoved))
+    {
+        <div class="alert alert-warning">@bookingRemoved</div>
+    }
+}
+
+
+
+<h1>Bokningssida</h1>
+<h3>Nedan kan du se dina bokningar</h3>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Skapa bokning</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Car)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Car.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>              
+                    <a asp-action="Details" asp-route-id="@item.Id" method="post" class="btn btn-primary">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary">Delete</a>
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
