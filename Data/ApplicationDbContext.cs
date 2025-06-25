@@ -1,6 +1,7 @@
 ﻿using CarRental.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ProjektCarRental.Models;
 
 namespace ProjektCarRental.Data
 {
